@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 export const ImageGallery = ({ images, openModal }) => {
   return (
     <ul className={css.ImageGallery}>
-      {images.map(({ webformatURL, tags, largeImageURL, id }) => {
+      {images.map(({ webformatURL, tags, id }) => {
         return (
           <ImageGalleryItem
             key={id}
             smallImage={webformatURL}
             tags={tags}
-            largeImageURL={largeImageURL}
+            id={id}
             openModal={openModal}
           />
         );
@@ -25,7 +25,6 @@ ImageGallery.propTypes = {
     PropTypes.shape({
       webformatURL: PropTypes.string.isRequired,
       tags: PropTypes.string.isRequired,
-      largeImageURL: PropTypes.string.isRequired,
       id: PropTypes.number.isRequired,
     })
   ).isRequired,

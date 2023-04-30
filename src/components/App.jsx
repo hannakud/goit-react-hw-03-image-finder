@@ -5,9 +5,11 @@ import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
 import Loader from './Loader/Loader';
+// import Modal from './Modal/Modal';
 // import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Modal from './Modal/Modal';
 
 export class App extends Component {
   state = {
@@ -16,9 +18,7 @@ export class App extends Component {
     page: 1,
     total: 0,
     isLoading: false,
-    error: null,
-    showModal: false,
-    empty: false,
+    selectedImageId: null,
   };
 
   load = async search => {
@@ -33,7 +33,7 @@ export class App extends Component {
         return toast.error('There is no images found with that search request');
       }
     } catch (error) {
-      this.setState({ error });
+      toast.error(error.message);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -52,19 +52,27 @@ export class App extends Component {
         total: response.totalHits,
       }));
     } catch (error) {
-      this.setState({ error });
+      toast.error(error.message);
     } finally {
       this.setState({ isLoading: false });
     }
   };
 
-  openModal = url => {
-    console.log('openModal', url);
+  openModal = selectedImageId => {
+    this.setState({ selectedImageId });
+  };
+
+  closeModal = () => {
+    this.setState({ selectedImageId: null });
   };
 
   isShowLoadMoreButton = () => {
     const amount = this.state.images.length;
     return amount > 0 && amount < this.state.total && !this.state.isLoading;
+  };
+
+  getImageById = id => {
+    return this.state.images.find(el => el.id === id);
   };
 
   render = () => {
@@ -78,7 +86,14 @@ export class App extends Component {
           )}
           {this.state.isLoading && <Loader />}
         </div>
+
         <ToastContainer autoClose={3000} />
+        {this.state.selectedImageId && (
+          <Modal
+            image={this.getImageById(this.state.selectedImageId)}
+            onClose={this.closeModal}
+          />
+        )}
       </>
     );
   };
