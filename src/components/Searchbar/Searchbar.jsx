@@ -14,20 +14,20 @@ export class Searchbar extends Component {
     });
   };
 
+  onSubmit = event => {
+    event.preventDefault();
+    const search = this.state.search.toLowerCase().trim();
+    if (!search) return;
+    this.props.search(search);
+  };
+
   render() {
     return (
       <header className={css.Searchbar}>
-        <form
-          className={css.SearchForm}
-          onSubmit={event => {
-            event.preventDefault();
-            this.props.search(event.target[1].value);
-          }}
-        >
+        <form className={css.SearchForm} onSubmit={this.onSubmit}>
           <button type="submit" className={css.button}>
             <FiSearch />
           </button>
-
           <input
             className={css.inputSearch}
             type="text"
@@ -35,6 +35,7 @@ export class Searchbar extends Component {
             autoFocus
             placeholder="Search images and photos"
             onChange={this.onChange}
+            value={this.state.search}
           />
         </form>
       </header>
