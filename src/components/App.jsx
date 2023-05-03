@@ -26,8 +26,14 @@ export class App extends Component {
       this.setState({ isLoading: true });
       try {
         const response = await fetchImages(page, search);
+        const images = response.hits.map(image => ({
+          largeImageURL: image.largeImageURL,
+          webformatURL: image.webformatURL,
+          id: image.id,
+          tags: image.tags,
+        }));
         this.setState(prevState => ({
-          images: [...prevState.images, ...response.hits],
+          images: [...prevState.images, ...images],
           total: response.totalHits,
         }));
         if (response.hits.length === 0) {
@@ -49,10 +55,6 @@ export class App extends Component {
 
   loadMore = () => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
-  };
-
-  getImageById = id => {
-    return this.state.images.find(el => el.id === id);
   };
 
   openModal = modalData => {
